@@ -6,8 +6,6 @@ SUBGRAPH_ENDPOINTS = {
     "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
 }
 
-fields = [""]
-
 
 def fetch_pids():
     pid_query = """
@@ -20,13 +18,14 @@ def fetch_pids():
 """
     pids = {}
 
-    for pid in pids:
-        result = requests.post(
-            SUBGRAPH_ENDPOINTS["arbitrum"],
-            json={"query": pid_query},
-        )
+    result = requests.post(
+        SUBGRAPH_ENDPOINTS["arbitrum"],
+        json={"query": pid_query},
+    )
 
+    if result.status_code == 200:
         data = json.loads(result.text)
         print(data)
 
-        return pids
+    else:
+        print(f"Failed to fetch: {result.text}")
