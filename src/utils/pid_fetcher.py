@@ -2,6 +2,10 @@ import csv
 import requests
 import json
 
+# Need to figure out:
+# Why requests won't load
+# Why my script won't print
+
 SUBGRAPH_ENDPOINTS = {
     "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
 }
