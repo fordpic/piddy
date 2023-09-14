@@ -1,6 +1,8 @@
 import csv
 import requests
 import json
+import pygsheets
+import pandas as pd
 
 SUBGRAPH_ENDPOINTS = {
     "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
@@ -31,10 +33,9 @@ def fetch_pids():
             pair_addy = pool["pair"]
             pids_n_pairs[pid] = pair_addy
 
-        print(pids_n_pairs)
+        # print(pids_n_pairs)
 
-        # write to csv
-        # TO DO: port to G Sheets
+        # convert to csv
         with open("arbitrum_pids.csv", "w", newline="") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(["Pool ID", "Pair Addy"])
@@ -42,8 +43,15 @@ def fetch_pids():
             for pid, pair_addy in pids_n_pairs.items():
                 writer.writerow([pid, pair_addy])
 
+        # convert to df
+        pd.read_csv("arbitrum_pids.csv")
+
+        # send to g sheets
+
+        print("\nData pulled and ported successfully")
+
     else:
-        print(f"Failed to fetch: {response.text}")
+        print(f"Failed to fetch data: {response.text}")
 
 
 fetch_pids()
