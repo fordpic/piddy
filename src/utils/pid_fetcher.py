@@ -33,6 +33,15 @@ def fetch_pids():
 
         print(pids_n_pairs)
 
+        # write to csv
+        # TO DO: port to G Sheets
+        with open("arbitrum_pids.csv", "w", newline="") as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(["Pool ID", "Pair Addy"])
+
+            for pid, pair_addy in pids_n_pairs.items():
+                writer.writerow([pid, pair_addy])
+
     else:
         print(f"Failed to fetch: {response.text}")
 
