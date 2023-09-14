@@ -2,10 +2,6 @@ import csv
 import requests
 import json
 
-# Need to figure out:
-# Why requests won't load
-# Why my script won't print
-
 SUBGRAPH_ENDPOINTS = {
     "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
 }
@@ -29,7 +25,10 @@ def fetch_pids():
 
     if result.status_code == 200:
         data = json.loads(result.text)
-        print(data)
+        print(data["data"]["pools"]["pair"])
 
     else:
         print(f"Failed to fetch: {result.text}")
+
+
+fetch_pids()
