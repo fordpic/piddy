@@ -19,7 +19,7 @@ SUBGRAPH_ENDPOINTS = {
 def fetch_pids():
     pid_query = """
     query pidQuery {
-        pools {
+        pools(orderBy: id, orderDirection: asc, first: 1000) {
             id
             pair
         }
