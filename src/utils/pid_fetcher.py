@@ -1,8 +1,15 @@
 import csv
 import requests
 import json
+import os
 import pygsheets
 import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
+GOOGLE_CREDS = os.getenv("GOOGLE_CREDS")
+
+creds = pygsheets.authorize(service_file=GOOGLE_CREDS)
 
 SUBGRAPH_ENDPOINTS = {
     "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
@@ -44,9 +51,13 @@ def fetch_pids():
                 writer.writerow([pid, pair_addy])
 
         # convert to df
-        pd.read_csv("arbitrum_pids.csv")
+        df = pd.read_csv("arbitrum_pids.csv")
 
         # send to g sheets
+        sheet = creds.open("Dummy Sheet for Arb Pids")
+        db = sheet[0]
+
+        db.set_dataframe(df, (1, 1))
 
         print("\nData pulled and ported successfully")
 
