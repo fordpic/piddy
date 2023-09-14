@@ -16,19 +16,25 @@ def fetch_pids():
         }
     }
 """
-    pids = {}
+    pids_n_pairs = {}
 
-    result = requests.post(
+    response = requests.post(
         SUBGRAPH_ENDPOINTS["arbitrum"],
         json={"query": pid_query},
     )
 
-    if result.status_code == 200:
-        data = json.loads(result.text)
-        print(data["data"]["pools"]["pair"])
+    if response.status_code == 200:
+        data = json.loads(response.text)
+
+        for pool in data["data"]["pools"]:
+            pid = pool["id"]
+            pair_addy = pool["pair"]
+            pids_n_pairs[pid] = pair_addy
+
+        print(pids_n_pairs)
 
     else:
-        print(f"Failed to fetch: {result.text}")
+        print(f"Failed to fetch: {response.text}")
 
 
 fetch_pids()
