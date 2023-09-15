@@ -12,7 +12,7 @@ GOOGLE_CREDS = os.getenv("GOOGLE_CREDS")
 creds = pygsheets.authorize(service_file=GOOGLE_CREDS)
 
 SUBGRAPH_ENDPOINTS = {
-    "arbitrum": "https://api.thegraph.com/subgraphs/name/sushiswap/arbitrum-minichef",
+    "polygon": "https://api.thegraph.com/subgraphs/name/sushiswap/matic-minichef",
 }
 
 
@@ -28,7 +28,7 @@ def fetch_pids():
     pids_n_pairs = {}
 
     response = requests.post(
-        SUBGRAPH_ENDPOINTS["arbitrum"],
+        SUBGRAPH_ENDPOINTS["polygon"],
         json={"query": pid_query},
     )
 
@@ -40,10 +40,8 @@ def fetch_pids():
             pair_addy = pool["pair"]
             pids_n_pairs[pid] = pair_addy
 
-        # print(pids_n_pairs)
-
         # convert to csv
-        with open("arbitrum_pids.csv", "w", newline="") as csv_file:
+        with open("polygon_pids.csv", "w", newline="") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(["Pool ID", "Pair Addy"])
 
@@ -51,15 +49,15 @@ def fetch_pids():
                 writer.writerow([pid, pair_addy])
 
         # convert to df
-        df = pd.read_csv("arbitrum_pids.csv")
+        df = pd.read_csv("polygon_pids.csv")
 
         # send to g sheets
-        sheet = creds.open("Dummy Sheet for Arb Pids")
-        db = sheet[0]
+        sheet = creds.open("PIDS N PAIRS")
+        db = sheet[1]
 
         db.set_dataframe(df, (1, 1))
 
-        print("\nData pulled and ported successfully")
+        print("\nData pulled from Polygon and ported successfully")
 
     else:
         print(f"Failed to fetch data: {response.text}")
